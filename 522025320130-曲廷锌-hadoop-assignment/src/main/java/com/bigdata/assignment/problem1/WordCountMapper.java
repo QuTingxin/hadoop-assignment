@@ -15,28 +15,25 @@ public class WordCountMapper extends Mapper<Object, Text, Text, IntWritable> {
     public void map(Object key, Text value, Context context) 
             throws IOException, InterruptedException {
         
-        // 将输入行转换为小写并清理
         String line = value.toString().toLowerCase();
         
-        // 使用 StringTokenizer 分割单词
         StringTokenizer tokenizer = new StringTokenizer(line);
         
         while (tokenizer.hasMoreTokens()) {
-            // 清理单词：移除标点符号，只保留字母和数字
             String rawWord = tokenizer.nextToken();
             String cleanWord = rawWord.replaceAll("[^a-zA-Z0-9]", "");
             
-            // 过滤空字符串
+            // 
             if (!cleanWord.isEmpty()) {
                 word.set(cleanWord);
                 context.write(word, one);
                 
-                // 计数器统计
+                // 
                 context.getCounter("WORD_COUNT", "TOTAL_WORDS").increment(1);
             }
         }
         
-        // 统计处理的行数
+        // 
         context.getCounter("WORD_COUNT", "TOTAL_LINES").increment(1);
     }
 }

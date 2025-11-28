@@ -26,7 +26,7 @@ public class WordCountDriver {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "Word Count Problem 1");
         
-        // 设置Job参数
+        // 
         job.setJarByClass(WordCountDriver.class);
         job.setMapperClass(WordCountMapper.class);
         job.setCombinerClass(WordCountReducer.class);
@@ -35,7 +35,7 @@ public class WordCountDriver {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
         
-        // HDFS操作：检查输入目录
+        // 
         FileSystem fs = FileSystem.get(conf);
         Path inputPath = new Path(args[0]);
         if (!fs.exists(inputPath)) {
@@ -43,25 +43,24 @@ public class WordCountDriver {
             System.exit(1);
         }
         
-        // HDFS操作：删除已存在的输出目录
         Path outputPath = new Path(args[1]);
         if (fs.exists(outputPath)) {
             fs.delete(outputPath, true);
             System.out.println("Deleted existing output directory: " + args[1]);
         }
         
-        // 设置输入输出路径
+        // 
         FileInputFormat.addInputPath(job, inputPath);
         FileOutputFormat.setOutputPath(job, outputPath);
         
-        // 提交作业并等待完成
+        // 
         boolean success = job.waitForCompletion(true);
         
         long endTime = System.currentTimeMillis();
         long processingTime = endTime - startTime;
         
         if (success) {
-            // 生成统计信息
+            // 
             generateStatistics(job, processingTime, outputPath, fs);
             System.out.println("WordCount completed successfully!");
         } else {
@@ -73,12 +72,12 @@ public class WordCountDriver {
     private static void generateStatistics(Job job, long processingTime, Path outputPath, FileSystem fs) 
             throws Exception {
         
-        // 获取计数器值
+        // 
         long totalWords = job.getCounters().findCounter("WORD_COUNT", "TOTAL_WORDS").getValue();
         long uniqueWords = job.getCounters().findCounter("WORD_COUNT", "UNIQUE_WORDS").getValue();
         long totalLines = job.getCounters().findCounter("WORD_COUNT", "TOTAL_LINES").getValue();
         
-        // 创建统计信息文件
+        // 
         Path statsPath = new Path(outputPath, "statistics.txt");
         try (OutputStream os = fs.create(statsPath);
              BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
@@ -90,14 +89,12 @@ public class WordCountDriver {
             writer.write("total_lines\t" + totalLines + "\n");
         }
         
-        // 打印统计信息
         System.out.println("=== WordCount Statistics ===");
         System.out.println("Processing Time: " + processingTime + " ms");
         System.out.println("Total Words: " + totalWords);
         System.out.println("Unique Words: " + uniqueWords);
         System.out.println("Total Lines: " + totalLines);
         
-        // 显示输出文件列表
         System.out.println("=== Output Files ===");
         FileStatus[] fileStatuses = fs.listStatus(outputPath);
         for (FileStatus status : fileStatuses) {

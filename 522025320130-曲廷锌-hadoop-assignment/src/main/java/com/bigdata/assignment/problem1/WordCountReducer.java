@@ -20,7 +20,7 @@ public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritab
         result.set(sum);
         context.write(key, result);
         
-        // 统计唯一单词数
+        // 
         context.getCounter("WORD_COUNT", "UNIQUE_WORDS").increment(1);
     }
 }
