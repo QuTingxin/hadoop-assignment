@@ -10,7 +10,7 @@ public class WordCountCombiner extends Reducer<Text, IntWritable, Text, IntWrita
     private IntWritable result = new IntWritable();
 
     @Override
-    public void reduce(Text key, Iterable<IntWritable> values, Context context)
+    public void reduce(Text key, Iterable<IntWritable> values, Context context) 
             throws IOException, InterruptedException {
         
         int sum = 0;
@@ -20,7 +20,7 @@ public class WordCountCombiner extends Reducer<Text, IntWritable, Text, IntWrita
         result.set(sum);
         context.write(key, result);
         
-        // 统计Combiner输出记录数
+        // Combiner输出记录统计
         context.getCounter("COMBINER_STATS", "OUTPUT_RECORDS").increment(1);
     }
 }

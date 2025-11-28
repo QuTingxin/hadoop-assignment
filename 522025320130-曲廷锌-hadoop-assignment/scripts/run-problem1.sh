@@ -1,19 +1,14 @@
 #!/bin/bash
 
 # 题目一运行脚本
+INPUT_PATH="/public/data/wordcount"
+OUTPUT_PATH="/users/s522025320130/homework1/problem1"
+
 echo "Running Problem 1: Basic WordCount"
+echo "Input: $INPUT_PATH"
+echo "Output: $OUTPUT_PATH"
 
-# 编译
-javac -cp $(hadoop classpath) -d target/classes src/main/java/com/bigdata/assignment/problem1/*.java
+hadoop jar hadoop-assignment.jar com.bigdata.assignment.problem1.WordCountDriver \
+    $INPUT_PATH $OUTPUT_PATH
 
-# 打包
-jar cf hadoop-assignment-problem1.jar -C target/classes .
-
-# 运行
-hadoop jar hadoop-assignment-problem1.jar com.bigdata.assignment.problem1.WordCountDriver \
-    /public/data/wordcount /users/$USER/homework1/problem1
-
-# 查看结果
-echo "=== Results ==="
-hdfs dfs -ls /users/$USER/homework1/problem1
-hdfs dfs -cat /users/$USER/homework1/problem1/part-r-00000 | head -20
+echo "Problem 1 completed. Results saved to: $OUTPUT_PATH"
